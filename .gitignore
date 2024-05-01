@@ -1,0 +1,13 @@
+# all bin folders
+./library/glfw/bin/*
+./library/glm/bin/*
+./library/glad/bin/*
+./apollo/bin/*
+./sandbox/bin/*
+
+# all library files
+./libs/*
+
+# all object files
+./apollo/source/**/*.o
+./sandbox/source/**/*.o
