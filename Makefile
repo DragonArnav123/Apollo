@@ -4,19 +4,20 @@ CXX 			:= g++
 MKDIR 			:= md
 RMDIR		 	:= rd /s /q
 
-APDIR 			:= .\apollo
-SBDIR 			:= .\sandbox
-EXTDIR 			:= .\library
-LIBDIR 			:= .\libs
+APDIR 			:= apollo
+SBDIR 			:= sandbox
+EXTDIR 			:= library
+LIBDIR 			:= libs
 
 CVER 			?= 11
 CXXVER 			?= 20
 PLATFORM 		?= Windows
 
-CONFIG 			?= Debug
+CONFIG 			?= DEBUG
 
 CFLAGS 			:= -DCXX_STD_VERSION=$(CXXVER) -DC_STD_VERSION=$(CVER)
-CFLAGS 			+= -I.\library\glfw\include -I.\library\glm -I.\library\glad\include
+CFLAGS 			+= -I./library/glfw/include -I./library/glm -I./library/glad/include
+CFLAGS 			+= -DAPOLLO_CONFIG_$(CONFIG)
 
 ifeq ($(PLATFORM), Windows)
 	CFLAGS 		+= -DAPOLLO_PLATFORM_WINDOWS
@@ -39,6 +40,11 @@ export LIBDIR
 export CVER
 export CXXVER
 export CFLAGS
+export PLATFORM
+export CONFIG
+
+default_target: all
+
 
 .PHONY: all clean-all clean-apollo clean-sandbox clean-lib run apollo sandbox
 
@@ -46,7 +52,7 @@ export CFLAGS
 all: libraries apollo sandbox
 
 
-libraries: md-lib $(LIBDIR)\libglfw3.a $(LIBDIR)\libglm.a $(LIBDIR)\glad.o
+libraries: md-lib $(LIBDIR)/libglfw3.a $(LIBDIR)/libglm.a $(LIBDIR)/glad.o
 
 
 md-lib:
@@ -54,33 +60,36 @@ md-lib:
 
 
 # GLFW_LIBRARY_TYPE=STATIC/SHARED/OBJECT GLFW_BUILD_EXAMPLES=ON/OFF GLFW_BUILD_TESTS=ON/OFF GLFW_BUILD_DOCS=ON/OFF
-$(LIBDIR)\libglfw3.a:
-	cd $(EXTDIR)\glfw && if not exist .\bin\src\libglfw3.a cmake -S . -B .\bin -G "MinGW Makefiles" -DGLFW_LIBRARY_TYPE=STATIC -DGLFW_BUILD_EXAMPLES=OFF \
-		-DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF && $(MAKE) -C .\bin --no-print-directory
-	copy $(EXTDIR)\glfw\bin\src\libglfw3.a $(LIBDIR)
+$(LIBDIR)/libglfw3.a:
+	cd $(EXTDIR)/glfw && if not exist ./bin/src/libglfw3.a cmake -S . -B ./bin -G "MinGW Makefiles" -DGLFW_LIBRARY_TYPE=STATIC -DGLFW_BUILD_EXAMPLES=OFF \
+		-DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_DOCS=OFF && $(MAKE) -C ./bin --no-print-directory
+	copy $(EXTDIR)/glfw/bin/src/libglfw3.a $(LIBDIR)
 
 
 # GLM_BUILD_TESTS=ON/OFF BUILD_SHARED_LIBS(CMAKE DEFINITION)=ON/OFF
-$(LIBDIR)\libglm.a:
-	cd $(EXTDIR)\glm && if not exist .\bin\libglm.a cmake -S . -B .\bin -G"MinGW Makefiles" -DGLM_BUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF && $(MAKE) -C .\bin --no-print-directory
-	copy $(EXTDIR)\glm\bin\glm\libglm.a $(LIBDIR)
+$(LIBDIR)/libglm.a:
+	cd $(EXTDIR)/glm && if not exist ./bin/libglm.a cmake -S . -B ./bin -G"MinGW Makefiles" -DGLM_BUILD_TESTS=OFF -DBUILD_SHARED_LIBS=OFF && $(MAKE) -C ./bin \
+		--no-print-directory
+	copy $(EXTDIR)/glm/bin/glm/libglm.a $(LIBDIR)
 
 
-$(LIBDIR)\glad.o: $(EXTDIR)\glad\bin\glad.o
+$(LIBDIR)/glad.o: $(EXTDIR)/glad/bin/glad.o
 	copy $^ $(LIBDIR)
 
 
-$(EXTDIR)\glad\bin\glad.o: $(EXTDIR)\glad\src\glad.c $(EXTDIR)\glad\include\glad\glad.h $(EXTDIR)\glad\include\KHR\khrplatform.h
+$(EXTDIR)/glad/bin/glad.o: $(EXTDIR)/glad/src/glad.c $(EXTDIR)/glad/include/glad/glad.h $(EXTDIR)/glad/include/KHR/khrplatform.h
 	@if not exist $(EXTDIR)\glad\bin $(MKDIR) $(EXTDIR)\glad\bin
 	$(CC) -o $@ -c $< -std=c$(CVER) -I$(EXTDIR)\glad\include
 
 
 apollo:
-	$(MAKE) -C $(APDIR) --no-print-directory
+	@echo Making apollo
+	@$(MAKE) -C $(APDIR) -fapollo.mk --no-print-directory
 
 
 sandbox:
-	$(MAKE) -C $(SBDIR) --no-print-directory
+	@echo Making sandbox
+	@$(MAKE) -C $(SBDIR) -fsandbox.mk --no-print-directory
 
 
 clean-all: clean-lib clean-apollo clean-sandbox
@@ -93,17 +102,17 @@ clean-lib:
 	$(RMDIR) $(EXTDIR)\glad\bin
 
 clean-apollo:
-	$(MAKE) -C $(APDIR) clean --no-print-directory
+	$(MAKE) clean -C $(APDIR) -fapollo.mk --no-print-directory
 
 
 clean-sandbox:
-	$(MAKE) -C $(SBDIR) clean --no-print-directory
+	$(MAKE) clean -C $(SBDIR) -fsandbox.mk --no-print-directory
 
 
 run:
-	@$(MAKE) -C $(APDIR) --no-print-directory
-	@$(MAKE) -C $(SBDIR) --no-print-directory
-	@$(MAKE) -C $(SBDIR) run --no-print-directory
+	@$(MAKE) -C $(APDIR) -fapollo.mk --no-print-directory
+	@$(MAKE) -C $(SBDIR) -fsandbox.mk --no-print-directory
+	@$(MAKE) run -C $(SBDIR) -fsandbox.mk --no-print-directory
 
 
 %.c:

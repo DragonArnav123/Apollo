@@ -9,7 +9,7 @@
 typedef unsigned char 			APu08;
 typedef unsigned short 			APu16;
 typedef unsigned int 			APu32;
-typedef unsigned long 			APi64;
+typedef unsigned long 			APu64;
 typedef unsigned long long 		APu128;
 
 typedef 		 char 			APi08;
@@ -26,3 +26,5 @@ typedef unsigned char 			APubyte;
 
 typedef 		 char *			APcstr;
 typedef const 	 char * 		APccstr;
+
+typedef unsigned int 			APsize;

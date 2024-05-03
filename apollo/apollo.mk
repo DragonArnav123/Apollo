@@ -1,29 +1,16 @@
-# CC 				?= gcc
-# CXX 			?= g++
+BINDIR 			:= bin
+SRCDIR 			:= source
+INCDIR 			:= $(SRCDIR)/include
 
-# MKDIR 			?= md
-# RMDIR		 	?= rd /s /q
-
-# _APDIR 			:= ..\$(APDIR)
-# _SBDIR 			:= ..\$(SBDIR)
-# _EXTDIR 		:= ..\$(EXTDIR)
-# _LIBDIR 		:= ..\$(LIBDIR)
-
-# CVER 			?= 11
-# CXXVER 			?= 20
-# PLATFORM 		?= Windows
-
-# DEFS 			+= -DAPOLLO_CORE
-
-BINDIR 			:= .\bin
-SRCDIR 			:= .\source
-INCDIR 			:= $(SRCDIR)\include
+_APDIR 			:= .
+_SBDIR 			:= ../$(SBDIR)
+_LIBDIR 		:= ../$(LIBDIR)
 
 CFLAGS 			+= -Wall -Wpedantic
 CFLAGS 			+= -O2
 CFLAGS 			+= --sysroot=./
 CFLAGS 			+= -DAPOLLO_CORE -DAPOLLO_ASSETS_DIR=\"./assets\" 
-LDFLAGS 		:= $(_LIBDIR)\glad.o
+LDFLAGS 		:= $(_LIBDIR)/glad.o
 LDFLAGS 		+= -L$(_LIBDIR)
 LDFLAGS			+= -lglfw3 -lglm -lopengl32 -lgdi32
 
@@ -44,11 +31,18 @@ INCFILES 		+= $(wildcard $(INCDIR)/**/**/*.h)
 INCFILES 		+= $(wildcard $(INCDIR)/**/**/**/.h)
 OBJFILES 		:= $(SRCFILES:.cpp=.o)
 
-APOLLOLIB 		:= $(BINDIR)\libApollo.dll
+APOLLOLIB 		:= $(BINDIR)/libApollo.dll
+
+default_target: all
+
 
 .PHONY: all clean
 
-all: dirs $(APOLLOLIB)
+all: dirs $(INCDIR)/APpch.h.gch $(APOLLOLIB)
+
+
+$(INCDIR)/APpch.h.gch: $(INCDIR)/APpch.h
+	$(CXX) -o $@ $^ $(CFLAGS)
 
 
 files:
@@ -63,7 +57,7 @@ dirs:
 
 
 $(APOLLOLIB): $(OBJFILES) | $(INCFILES)
-	$(CXX) -shared -o $@ $< $(LDFLAGS)
+	$(CXX) -shared -o $@ $^ $(LDFLAGS)
 
 
 %.o: %.cpp

@@ -5,6 +5,7 @@
 /////////////////////////////////////////////////////
 #include "APpch.h"
 #include "core/Core.h"
+#include "core/Engine.h"
 #include "core/Application.h"
 #include "core/EntryPoint.h"
 #include "core/Window.h"
@@ -51,6 +52,6 @@
 /////////////////////////////////////////////////////
 // glm
 /////////////////////////////////////////////////////
-#include "../../../library/glm/glm.hpp"
-#include "../../../library/glm/gtc/matrix_transform.hpp"
-#include "../../../library/glm/gtc/type_ptr.hpp"
+#include "../../../library/glm/glm/glm.hpp"
+#include "../../../library/glm/glm/gtc/matrix_transform.hpp"
+#include "../../../library/glm/glm/gtc/type_ptr.hpp"

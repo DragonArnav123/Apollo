@@ -18,4 +18,6 @@
 
 #if defined(APOLLO_PLATFORM_WINDOWS)
 	#include <Windows.h>
+#else
+	#error !!! [Apollo] Only on windows for now !!!
 #endif
