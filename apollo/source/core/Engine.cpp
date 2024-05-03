@@ -17,4 +17,16 @@ namespace Apollo {
 		Window::Terminate();
 	}
 
+	void ForceExit(APi32 exitCode)
+	{
+		// Log
+		Terminate();
+		exit(-1);
+	}
+
+	std::string GetApolloAssertDirectory()
+	{
+		// we can get apollo library working directory with some manipulation from __FILE__ and this file
+	}
+
 }
