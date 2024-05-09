@@ -4,3 +4,6 @@
 [submodule "library/glm"]
 	path = library/glm
 	url = https://www.github.com/g-truc/glm
+[submodule "library/spdlog"]
+	path = library/spdlog
+	url = https://www.github.com/gabime/spdlog

@@ -24,27 +24,27 @@ namespace Util {
 	{
 		switch (type)
 		{
-			case SOFT_ASSERT:
+			case AssertType::SOFT_ASSERT:
 				Internal::SoftAssert(expression, message, false);
 				break;	
 			
-			case HARD_ASSERT:
+			case AssertType::HARD_ASSERT:
 				Internal::HardAssert(expression, message, false);
 				break;
 			
-			case FATAL_ASSERT:
+			case AssertType::FATAL_ASSERT:
 				Internal::FatalAssert(expression, message, false);
 				break;
 			
-			case DEBUG_SOFT_ASSERT:
+			case AssertType::DEBUG_SOFT_ASSERT:
 				Internal::SoftAssert(expression, message, true);
 				break;
 			
-			case DEBUG_HARD_ASSERT:
+			case AssertType::DEBUG_HARD_ASSERT:
 				Internal::HardAssert(expression, message, true);
 				break; 
 			
-			case DEBUG_FATAL_ASSERT:
+			case AssertType::DEBUG_FATAL_ASSERT:
 				Internal::FatalAssert(expression, message, true);
 				break;
 		}

@@ -9,7 +9,7 @@ struct GLFWwindow;
 namespace Apollo {
 
 	class APOLLO_API Window
-	{
+{
 	public:
 		Window(APsize width, APsize height);
 		Window(APsize size);
@@ -18,7 +18,7 @@ namespace Apollo {
 		Window(const Window &) = delete;
 		virtual ~Window();
 
-		static void Initialize();
+		static bool Initialize();
 		static void Terminate();
 
 		// getters

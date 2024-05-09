@@ -1,8 +1,4 @@
 #include "../../apollo/source/include/Apollo.h"
-// #include "../../library/glm/glm/glm.hpp"
-// #include "../../library/glm/glm/gtc/matrix_transform.hpp"
-// #include "../../library/glm/glm/gtc/type_ptr.hpp"
-
 #include <GL/gl.h>
 
 class Sandbox : public Apollo::Application
@@ -26,6 +22,10 @@ public:
 		this->Position[0] = glm::vec4(0.0f, 0.5f, 0.0f, 1.0f);
 		this->Position[1] = glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f);
 		this->Position[2] = glm::vec4(0.5f, -0.5f, 0.0f, 1.0f);
+
+		// Query Initialization Error
+		Apollo::Util::Error initError = Apollo::QueryInitializationError();
+		initError.LogToConsole();
 	}
 
 	void OnShutDown() override
@@ -41,7 +41,7 @@ public:
 		for (APsize i = 0; i < 3; i++)
 			this->Position[i] = model * this->Position[i];
 
-		coeff += 0.00000001f;
+		coeff += 0.000001f;
 	}
 
 	void OnRender() override

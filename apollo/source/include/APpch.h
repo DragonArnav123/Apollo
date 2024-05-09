@@ -15,6 +15,7 @@
 #include <cassert>
 #include <algorithm>
 #include <functional>
+#include <memory>
 
 #if defined(APOLLO_PLATFORM_WINDOWS)
 	#include <Windows.h>

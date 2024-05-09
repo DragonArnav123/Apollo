@@ -61,19 +61,19 @@ namespace Apollo {
 		glfwDestroyWindow(m_Win);
 	}
 
-	void Window::Initialize()
+	bool Window::Initialize()
 	{
 		static bool initialized = false;
 
-		if (initialized) return;
+		if (initialized) return true;
 
 		if (!glfwInit())
 		{
-			// logging , hard assert
-			std::cout << " Could not initailize glfw \n";
+			return false;
 		}
 
 		initialized = true;
+		return true;
 	}
 
 	void Window::Terminate()

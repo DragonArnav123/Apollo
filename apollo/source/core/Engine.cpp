@@ -1,3 +1,4 @@
+#include <GLFW/glfw3.h>
 #include "../include/core/Engine.h"
 #include "../include/core/Window.h"
 #include "../include/core/Log.h"
@@ -5,16 +6,40 @@
 
 namespace Apollo {
 
+	Util::Error g_InitializationError = Util::Error::NoError("ApolloCore");
+
 	void Initialize()
 	{
+		// Initialize Log
+		bool loggerInitialized = Logger::Initialize();
+		if (!loggerInitialized)
+		{
+			g_InitializationError = Util::Error("ApolloCore", "Failed to initialize logger (spdlog)!", true);
+			return;
+		}
+		AP_CORE_INFO("Logger Initialized")
+
 		// Initialze Window
-		Window::Initialize();
+		bool windowIntialized = Window::Initialize();
+		if (!windowIntialized)
+		{
+			g_InitializationError = Util::Error("ApolloCore", "Failed to initialize window (glfw)!", true);
+			return;
+		}
+		AP_CORE_INFO("Window Initialized")
 	}
 
 	void Terminate()
 	{
+		AP_CORE_INFO("Terminating Apollo Engine")
+
 		// Terminate Window
 		Window::Terminate();
+		AP_CORE_INFO("Window Terminated")
+
+		// Terminate Log
+		Logger::Terminate();
+		AP_CORE_INFO("Logger Terminated")
 	}
 
 	void ForceExit(APi32 exitCode)
@@ -24,9 +49,15 @@ namespace Apollo {
 		exit(-1);
 	}
 
-	std::string GetApolloAssertDirectory()
+	std::string GetAssertDir()
 	{
 		// we can get apollo library working directory with some manipulation from __FILE__ and this file
+		return "";
+	}
+
+	Util::Error APOLLO_API QueryInitializationError()
+	{
+		return g_InitializationError;
 	}
 
 }

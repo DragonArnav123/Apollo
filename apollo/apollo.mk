@@ -5,14 +5,16 @@ INCDIR 			:= $(SRCDIR)/include
 _APDIR 			:= .
 _SBDIR 			:= ../$(SBDIR)
 _LIBDIR 		:= ../$(LIBDIR)
+_EXTDIR 		:= ../$(EXTDIR)
 
+# CFLAGS 			+= $(INCLUDES:$(EXTDIR)=$(_LIBDIR))
+CFLAGS 			+= -I$(_EXTDIR)/glfw/include -I$(_EXTDIR)/glm -I$(_EXTDIR)/glad/include -I$(_EXTDIR)/spdlog/include
 CFLAGS 			+= -Wall -Wpedantic
-CFLAGS 			+= -O2
 CFLAGS 			+= --sysroot=./
 CFLAGS 			+= -DAPOLLO_CORE -DAPOLLO_ASSETS_DIR=\"./assets\" 
 LDFLAGS 		:= $(_LIBDIR)/glad.o
 LDFLAGS 		+= -L$(_LIBDIR)
-LDFLAGS			+= -lglfw3 -lglm -lopengl32 -lgdi32
+LDFLAGS			+= -lglfw3 -lglm -lspdlog -lopengl32 -lgdi32
 
 ifeq ($(PLATFORM), Windows)
 	LDFLAGS 	+= -lkernel32 -luser32
@@ -20,6 +22,15 @@ endif
 
 ifeq ($(CONFIG), Debug)
 	CFLAGS 			+= -save-temps -time
+	CFLAGS 			+= -save-temps
+else
+ifeq ($(CONFIG), Release)
+	CFLAGS 			+= -02
+else
+ifeq ($(CONFIG), Distribution)
+	CFLAGS 			+= -03
+endif
+endif
 endif
 
 SRCFILES 		:= $(wildcard $(SRCDIR)/*.cpp)
@@ -38,8 +49,10 @@ default_target: all
 
 .PHONY: all clean
 
-all: dirs $(INCDIR)/APpch.h.gch $(APOLLOLIB)
+all: try dirs $(INCDIR)/APpch.h.gch $(APOLLOLIB)
 
+try:
+	@echo $(CFLAGS)
 
 $(INCDIR)/APpch.h.gch: $(INCDIR)/APpch.h
 	$(CXX) -o $@ $^ $(CFLAGS)

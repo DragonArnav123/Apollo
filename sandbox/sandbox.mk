@@ -11,10 +11,14 @@ _APDIR 			:= ../$(APDIR)
 _SBDIR 			:= .//
 _LIBDIR 		:= ../$(LIBDIR)
 endif
+_EXTDIR 		:= ../$(EXTDIR)
 
+# CFLAGS 			+= $(INCLUDES:$(EXTDIR)=$(_LIBDIR))
+CFLAGS 			+= -I$(_EXTDIR)/glfw/include -I$(_EXTDIR)/glm -I$(_EXTDIR)/glad/include -I$(_EXTDIR)/spdlog/include
 CFLAGS 			+= -Wall -Wpedantic
+CFLAGS 			+= -DAPOLLO_INCLUDE_UTILS -DAPOLLO_INCLUDE_GLM
 CFLAGS 			+= -O2
-CFLAGS 			+= --sysroot=./
+# CFLAGS 			+= --sysroot=./
 LDFLAGS 		:= -L$(BINDIR)
 LDFLAGS			+= -llibApollo -lopengl32 -lgdi32
 
@@ -40,7 +44,7 @@ EXE 			:= $(BINDIR)/Sandbox.exe
 default_target: all
 
 
-.PHONY: all clean run
+.PHONY: all clean run copy
 
 all: dirs $(_APDIR)/bin/libApollo.dll $(EXE)
 
@@ -52,15 +56,11 @@ files:
 	@echo $(INCFILES)
 
 
-$(_APDIR)/bin/libApollo.dll:
-	copy $(_APDIR)\bin\libApollo.dll $(BINDIR)
-
-
 dirs: 
 	@if not exist $(BINDIR) $(MKDIR) $(BINDIR)
 
 
-$(EXE): $(OBJFILES) | $(INCFILES)
+$(EXE): $(OBJFILES) | copy $(INCFILES)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 
@@ -79,3 +79,13 @@ clean:
 
 run:
 	$(EXE)
+
+ifeq ($(PLATFORM), Windows)
+copy:
+	copy $(_APDIR)\bin\libApollo.dll $(BINDIR)
+	@echo Copied apollo/bin/libApollo.dll to sandbox/bin
+else
+copy:
+	copy $(_APDIR)/bin/libApollo.dll $(BINDIR)
+	@echo Copied apollo/bin/libApollo.dll to sandbox/bin
+endif

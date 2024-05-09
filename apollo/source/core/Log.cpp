@@ -1,44 +1,36 @@
 #include "../include/APpch.h"
 #include "../include/core/Log.h"
+#include "../../../library/spdlog/include/spdlog/sinks/stdout_color_sinks.h"
 
 namespace Apollo {
-
-	namespace Internal {
-		static void Log(APccstr file, APccstr func, APi32 line, LogType type, bool isCore, const std::string &format, ...)
-		{
-
-		}
-	}
-
+	std::shared_ptr<spdlog::logger> Logger::s_CoreLogger;
+	std::shared_ptr<spdlog::logger> Logger::s_ClientLogger;
+	std::string Logger::m_Format = "[%n](%@)(%T)[%l]: %v";
 
 	Logger::Logger()
 	{
-
 	}
 
 	Logger::~Logger()
 	{
-
 	}
 
-	void Logger::Initialize()
+	bool Logger::Initialize()
 	{
+		spdlog::set_pattern(m_Format);
 
+		s_CoreLogger = spdlog::stdout_color_mt("APOLLO");
+		s_CoreLogger->set_level(spdlog::level::trace);
+
+		s_ClientLogger = spdlog::stdout_color_mt("APP");
+		s_ClientLogger->set_level(spdlog::level::trace);
+
+		return true; /* handle if this ever fails */
 	}
 
 	void Logger::Terminate()
 	{
-
-	}
-
-	void Logger::LogCore(APccstr file, APccstr func, APi32 line, LogType type, const std::string &format, ...)
-	{
-		Internal::Log(file, func, line, type, true, format, ...);
-	}
-
-	void Logger::LogClient(APccstr file, APccstr func, APi32 line, LogType type, const std::string &format, ...)
-	{
-		Internal::Log(file, func, line, type, false, format, ...);
+		s_CoreLogger->warn("@TODO: Logger::Terminate");
 	}
 
 }

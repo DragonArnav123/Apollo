@@ -28,7 +28,7 @@
 #else
 	#define APOLLO_DBG_SOFT_FUNC_ASSERT(lambda_func, message, ...) 		
 `	#define APOLLO_DBG_HARD_FUNC_ASSERT(lambda_func, message, ...) 			
-	#define APOLLO_DBG_FATTAL_FUNC_ASSERT(lambda_func, message, ...) 			
+	#define APOLLO_DBG_FATTAL_FUNC_ASSERT(lambda_func, message, ...) 				
 #endif
 
 namespace Apollo {
