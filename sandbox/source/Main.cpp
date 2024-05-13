@@ -1,66 +1,42 @@
-#include "../../apollo/source/include/Apollo.h"
-#include <GL/gl.h>
+#include "../../apollo/source/include/core/Application.h"
+#include "../../apollo/source/include/core/Engine.h"
+#include "../../apollo/source/include/core/Log.h"
+#include "include/Worlds.h"
 
-class Sandbox : public Apollo::Application
+#include <string>
+
+void static PrintWorldNames()
 {
-public:
-	Sandbox(const Apollo::ApplicationSpecification &appSpecification)
-		:
-		Apollo::Application(appSpecification)
-	{
-	}
+	std::string worldNames =
+		"DefWorld: It is the default world\n";
 
-	~Sandbox()
-	{
-	}
-
-	void OnBegin() override
-	{
-		p_Window->SetWidth(1000);
-		p_Window->SetHeight(900);
-
-		this->Position[0] = glm::vec4(0.0f, 0.5f, 0.0f, 1.0f);
-		this->Position[1] = glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f);
-		this->Position[2] = glm::vec4(0.5f, -0.5f, 0.0f, 1.0f);
-
-		// Query Initialization Error
-		Apollo::Util::Error initError = Apollo::QueryInitializationError();
-		initError.LogToConsole();
-	}
-
-	void OnShutDown() override
-	{
-	}
-
-	void OnUpdate(APf32 deltaTime) override
-	{
-		static APf32 coeff = 0.0f;
-
-		glm::mat4 model = glm::rotate(glm::mat4(1.0f), coeff * (glm::pi<float>() / 3), glm::vec3(0.0f, 0.0f, 1.0f));
-
-		for (APsize i = 0; i < 3; i++)
-			this->Position[i] = model * this->Position[i];
-
-		coeff += 0.000001f;
-	}
-
-	void OnRender() override
-	{
-		glBegin(GL_TRIANGLES);
-
-		for (APsize i = 0; i < 3; i++)
-			glVertex2f(this->Position[i].x, this->Position[i].y);
-
-		glEnd();
-	}
-
-public:
-	glm::vec4 Position[3];
-};
+	AP_CLIENT_INFO("World names: {}", worldNames);
+}
 
 Apollo::Application *Apollo::CreateApplication(APi32 argc, APccstr argv[])
 {
-	Sandbox *sandbox = new Sandbox( { "Test Apollo::Window", "", { argc, argv } } );
+	if (argc < 2)
+	{
+		AP_CLIENT_CRITICAL("Invalid Command Line Args: [Exe] [WorldName]");
+		AP_CLIENT_INFO("To find world name, use: [Exe] --print-world-names");
+		Apollo::ForceExit(-1);
+	}
 
-	return sandbox;
+	if (std::string(argv[1]) == "DefWorld")
+	{
+		Apollo::Application *sandbox = static_cast<Apollo::Application*>(RunDefaultWorld({ "Test Apollo::Engine", "", { argc, argv } }));
+		return sandbox;
+	}
+	else if (std::string(argv[1]) == "--print-world-names")
+	{
+		PrintWorldNames();
+	}
+	else 
+	{
+		AP_CLIENT_CRITICAL("Given World name does not exist!");
+		Apollo::ForceExit(-2);
+	}
+
+
+	return nullptr;
 }

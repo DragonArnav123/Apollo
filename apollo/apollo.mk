@@ -20,14 +20,13 @@ ifeq ($(PLATFORM), Windows)
 	LDFLAGS 	+= -lkernel32 -luser32
 endif
 
-ifeq ($(CONFIG), Debug)
+ifeq ($(CONFIG), DEBUG)
 	CFLAGS 			+= -save-temps -time
-	CFLAGS 			+= -save-temps
 else
-ifeq ($(CONFIG), Release)
+ifeq ($(CONFIG), RELEASE)
 	CFLAGS 			+= -02
 else
-ifeq ($(CONFIG), Distribution)
+ifeq ($(CONFIG), DIST)
 	CFLAGS 			+= -03
 endif
 endif
@@ -49,7 +48,7 @@ default_target: all
 
 .PHONY: all clean
 
-all: try dirs $(INCDIR)/APpch.h.gch $(APOLLOLIB)
+all: dirs $(INCDIR)/APpch.h.gch $(APOLLOLIB)
 
 try:
 	@echo $(CFLAGS)
@@ -83,5 +82,29 @@ $(APOLLOLIB): $(OBJFILES) | $(INCFILES)
 %.h:
 
 
+ifeq ($(CONFIG), DEBUG)
+ifeq ($(PLATFORM), Windows)
 clean:
 	$(RMDIR) $(BINDIR)
+	$(DELFILE) $(SRCDIR)\*.o
+	$(DELFILE) $(SRCDIR)\*.s
+	$(DELFILE) $(SRCDIR)\*.ii
+else
+clean:
+	$(RMDIR) $(BINDIR)
+	$(DELFILE) $(SRCDIR)/*.o
+	$(DELFILE) $(SRCDIR)/*.s
+	$(DELFILE) $(SRCDIR)/*.ii
+
+endif
+else
+ifeq ($(PLATFORM), Windows)
+clean:
+	$(RMDIR) $(BINDIR)
+	$(DELFILE) $(SRCDIR)\*.o
+else
+clean:
+	$(RMDIR) $(BINDIR)
+	$(DELFILE) $(SRCDIR)/*.o
+endif
+endif 

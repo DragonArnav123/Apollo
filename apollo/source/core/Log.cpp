@@ -33,4 +33,14 @@ namespace Apollo {
 		s_CoreLogger->warn("@TODO: Logger::Terminate");
 	}
 
+	std::shared_ptr<spdlog::logger> &Logger::GetCoreLogger()
+	{
+		return s_CoreLogger;
+	}
+
+	std::shared_ptr<spdlog::logger> &Logger::GetClientLogger()
+	{
+		return s_ClientLogger;
+	}
+
 }

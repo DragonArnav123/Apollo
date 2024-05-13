@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../APpch.h"
 #include "Core.h"
 #include "../utils/Input.h"
 

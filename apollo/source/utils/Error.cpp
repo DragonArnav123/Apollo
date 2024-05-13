@@ -1,3 +1,4 @@
+#include "../include/APpch.h"
 #include "../include/utils/Error.h"
 #include "../include/core/Log.h"
 

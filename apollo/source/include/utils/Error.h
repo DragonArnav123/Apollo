@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../APpch.h"
 #include "../core/Core.h"
 
 namespace Apollo {

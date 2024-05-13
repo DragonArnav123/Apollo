@@ -6,6 +6,10 @@
 	#define APOLLO_API __declspec(dllimport)
 #endif
 
+#define AP_GLOBAL_VAR 		static
+#define AP_LOCAL_PERSIST 	static
+#define AP_INTERNAL_FUNC 	static
+
 typedef unsigned char 			APu08;
 typedef unsigned short 			APu16;
 typedef unsigned int 			APu32;

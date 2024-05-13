@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
+#include <optional>
 
 #if defined(APOLLO_PLATFORM_WINDOWS)
 	#include <Windows.h>

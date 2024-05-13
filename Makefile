@@ -3,6 +3,7 @@ CXX 			:= g++
 
 MKDIR 			:= md
 RMDIR		 	:= rd /s /q
+DELFILE 		:= 
 
 APDIR 			:= apollo
 SBDIR 			:= sandbox
@@ -17,12 +18,15 @@ CONFIG 			?= DEBUG
 
 INCLUDES 		:= -I$(EXTDIR)/glfw/include -I$(EXTDIR)/glm -I$(EXTDIR)/glad/include -I$(EXTDIR)/spdlog/include
 
-CFLAGS 			:= -DCXX_STD_VERSION=$(CXXVER) -DC_STD_VERSION=$(CVER)
+CFLAGS 			:= -DAPOLLO_CXX_STANDARD=$(CXXVER) -DAPOLLO_C_STANDARD=$(CVER)
 # CFLAGS 			+= -I$(EXTDIR)/glfw/include -I$(EXTDIR)/glm -I$(EXTDIR)/glad/include -I$(EXTDIR)/spdlog/include
 CFLAGS 			+= -DAPOLLO_CONFIG_$(CONFIG)
 
+EXEPARAMS 		?= "DefWorld"
+
 ifeq ($(PLATFORM), Windows)
 	CFLAGS 		+= -DAPOLLO_PLATFORM_WINDOWS
+	DELFILE 	:= del /S /Q
 endif
 
 ifeq ($(CXXVER), 20)
@@ -31,10 +35,17 @@ else
 	CFLAGS 		+= -std=c++$(CXXVER)
 endif
 
+ifeq ($(CONFIG), DEBUG)
+	CFLAGS += -g
+else
+	CFLAGS += -s
+endif
+
 export CC
 export CXX
 export MKDIR
 export RMDIR
+export DELFILE
 export APDIR
 export SBDIR
 export EXTDIR
@@ -45,6 +56,7 @@ export CFLAGS
 export PLATFORM
 export CONFIG
 export INCLUDES
+export EXEPARAMS
 
 default_target: all
 

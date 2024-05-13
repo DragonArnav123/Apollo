@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../APpch.h"
 #include "../core/Core.h"
 #include "../_glm.h"
 

@@ -1,5 +1,7 @@
 #include "../include/APpch.h"
 #include "../include/core/Application.h"
+#include "../include/core/Timestep.h"
+#include "../include/platform/Time.h"
 
 namespace Apollo {
 
@@ -24,7 +26,7 @@ namespace Apollo {
 		// log
 	}
 
-	void Application::OnUpdate(/* change to Timestep */ APf32 dt)
+	void Application::OnUpdate(const Timestep &ts)
 	{
 	}
 
@@ -44,7 +46,7 @@ namespace Apollo {
 	void Application::Run()
 	{
 		p_Window->SetCurrentContext();
-		/* Timestep */ APf32 lastTime = 0.0f /* Platform::GetTime<APf32>() */;
+		Pltfrm::TimePoint lastTime = Pltfrm::TimePoint(0, 0, 0, 0);
 
 		while (p_Running)
 		{
@@ -52,12 +54,18 @@ namespace Apollo {
 			// Renderer::ClearScreen();
 
 			// Calculate timestep
-			APf32 currentTime = 0.0f /* Platform::GetTime<APf32>() */;
-			/* Timestep */ APf32 deltaTime = currentTime - lastTime;
+			// Get the current time
+			Pltfrm::TimePoint currentTime = Pltfrm::Time::GetCurrentTime();
+
+			// Calculate the delta time
+			Pltfrm::TimePoint deltaTime = currentTime - lastTime;
+
+			// Calculate the timestep by converting everything into seconds
+			Timestep timeStep = Pltfrm::Time::TimePointToSecondLowP(deltaTime);
 			lastTime = currentTime;
 
 			// Update
-			this->OnUpdate(deltaTime);
+			this->OnUpdate(timeStep);
 
 			// Render
 			this->OnRender();

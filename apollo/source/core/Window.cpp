@@ -1,3 +1,4 @@
+#include "../include/APpch.h"
 #include "../include/core/Window.h"
 #include "../include/_glfw.h"
 

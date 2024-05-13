@@ -1,3 +1,4 @@
+#include "../include/APpch.h"
 #include "../include/utils/Color.h"
 
 static glm::vec4 EnsureNormalized(const glm::vec4 &v)

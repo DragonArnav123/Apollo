@@ -17,7 +17,6 @@ _EXTDIR 		:= ../$(EXTDIR)
 CFLAGS 			+= -I$(_EXTDIR)/glfw/include -I$(_EXTDIR)/glm -I$(_EXTDIR)/glad/include -I$(_EXTDIR)/spdlog/include
 CFLAGS 			+= -Wall -Wpedantic
 CFLAGS 			+= -DAPOLLO_INCLUDE_UTILS -DAPOLLO_INCLUDE_GLM
-CFLAGS 			+= -O2
 # CFLAGS 			+= --sysroot=./
 LDFLAGS 		:= -L$(BINDIR)
 LDFLAGS			+= -llibApollo -lopengl32 -lgdi32
@@ -28,6 +27,14 @@ endif
 
 ifeq ($(CONFIG), DEBUG)
 	CFLAGS 			+= -save-temps -time
+else
+ifeq ($(CONFIG), RELEASE)
+	CFLAGS 			+= -O2
+else
+ifeq ($(CONFIG), DIST)
+	CFLAGS 			+= -O3
+endif
+endif
 endif
 
 SRCFILES 		:= $(wildcard $(SRCDIR)/*.cpp)
@@ -74,11 +81,36 @@ $(EXE): $(OBJFILES) | copy $(INCFILES)
 %.h:
 
 
+ifeq ($(CONFIG), DEBUG)
+ifeq ($(PLATFORM), Windows)
 clean:
 	$(RMDIR) $(BINDIR)
+	$(DELFILE) $(SRCDIR)\*.o
+	$(DELFILE) $(SRCDIR)\*.s
+	$(DELFILE) $(SRCDIR)\*.ii
+else
+clean:
+	$(RMDIR) $(BINDIR)
+	$(DELFILE) $(SRCDIR)/*.o
+	$(DELFILE) $(SRCDIR)/*.s
+	$(DELFILE) $(SRCDIR)/*.ii
+
+endif
+else
+ifeq ($(PLATFORM), Windows)
+clean:
+	$(RMDIR) $(BINDIR)
+	$(DELFILE) $(SRCDIR)\*.o
+else
+clean:
+	$(RMDIR) $(BINDIR)
+	$(DELFILE) $(SRCDIR)/*.o
+endif
+endif 
+
 
 run:
-	$(EXE)
+	$(EXE) $(EXEPARAMS)
 
 ifeq ($(PLATFORM), Windows)
 copy:

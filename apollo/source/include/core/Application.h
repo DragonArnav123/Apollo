@@ -6,6 +6,8 @@
 
 namespace Apollo {
 
+	class Timestep;
+
 	struct APOLLO_API ApplicationCommandLineArgs
 	{
 		APi32 Count = 0;
@@ -39,7 +41,7 @@ namespace Apollo {
 		inline ApplicationSpecification &GetAppSpecification() { return p_Specification; }
 
 		virtual void OnBegin();
-		virtual void OnUpdate(/* change to Timestep */ APf32 dt);
+		virtual void OnUpdate(const Timestep &ts);
 		virtual void OnRender();
 		virtual void OnShutDown();
 
