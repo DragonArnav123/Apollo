@@ -17,7 +17,6 @@
 	#define APOLLO_DBG_FATTAL_ASSERT(expression, message) 			
 #endif
 
-
 #define APOLLO_SOFT_FUNC_ASSERT(lambda_func, message, ...) 				Apollo::Util::Assert<__VA_ARGS__>(lambda_func, message, Apollo::Util::AssertType::SOFT_ASSERT);
 #define APOLLO_HARD_FUNC_ASSERT(lambda_func, message, ...) 				Apollo::Util::Assert<__VA_ARGS__>(lambda_func, message, Apollo::Util::AssertType::HARD_ASSERT);
 #define APOLLO_FATTAL_FUNC_ASSERT(lambda_func, message, ...) 			Apollo::Util::Assert<__VA_ARGS__>(lambda_func, message, Apollo::Util::AssertType::FATAL_ASSERT);
@@ -28,7 +27,7 @@
 	#define APOLLO_DBG_FATTAL_FUNC_ASSERT(lambda_func, message, ...) 	Apollo::Util::Assert<__VA_ARGS__>(lambda_func, message, Apollo::Util::AssertType::DEBUG_FATAL_ASSERT);
 #else
 	#define APOLLO_DBG_SOFT_FUNC_ASSERT(lambda_func, message, ...) 		
-	#define APOLLO_DBG_HARD_FUNC_ASSERT(lambda_func, message, ...) 			
+`	#define APOLLO_DBG_HARD_FUNC_ASSERT(lambda_func, message, ...) 			
 	#define APOLLO_DBG_FATTAL_FUNC_ASSERT(lambda_func, message, ...) 			
 #endif
 
@@ -47,8 +46,8 @@ namespace Util {
 
 	void APOLLO_API Assert(bool expression, const std::string &message, const AssertType &type);
 
-	template <Args...>
-	void APOLLO_API Assert(const std::functional<bool (Args)> &func, const std::string &message, const AssertType &type);
+	// template <Args...>
+	// void APOLLO_API Assert(const std::functional<bool (Args)> &func, const std::string &message, const AssertType &type);
 
 }
 }
