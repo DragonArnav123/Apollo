@@ -14,7 +14,7 @@ namespace Apollo {
 			return;
 
 		s_Instance = this;
-		p_Window = new Window(1000, 1000, specification.Name);
+		p_Window = new Window( { 1000, 1000, specification.Name, true } );
 	}
 
 	Application::~Application()
@@ -23,7 +23,6 @@ namespace Apollo {
 
 	void Application::OnBegin()
 	{
-		// log
 	}
 
 	void Application::OnUpdate(const Timestep &ts)
@@ -75,6 +74,7 @@ namespace Apollo {
 
 			// Swap Buffers
 			p_Window->SwapBuffers();
+			// try to see what happens without swap buffers
 
 			p_Running = p_Window->IsOpen();
 		}

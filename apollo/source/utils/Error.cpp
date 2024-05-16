@@ -19,6 +19,11 @@ namespace Util {
 
 	void Error::LogToConsole() const
 	{
+		if (m_Message == "No Error")
+		{
+			AP_CORE_INFO("{0}: {1}", m_Type, m_Message);
+			return;
+		}
 		if (m_IsFatal)
 		{
 			AP_CORE_CRITICAL("{0}: {1}", m_Type, m_Message);

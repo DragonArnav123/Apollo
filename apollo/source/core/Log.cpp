@@ -5,7 +5,7 @@
 namespace Apollo {
 	std::shared_ptr<spdlog::logger> Logger::s_CoreLogger;
 	std::shared_ptr<spdlog::logger> Logger::s_ClientLogger;
-	std::string Logger::m_Format = "[%n](%@)(%T)[%l]: %v";
+	std::string Logger::m_Format = "%^[%n](%@)(%T)[%l]: %v%$";
 
 	Logger::Logger()
 	{

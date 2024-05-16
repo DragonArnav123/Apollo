@@ -24,6 +24,10 @@ CFLAGS 			+= -DAPOLLO_CONFIG_$(CONFIG)
 
 EXEPARAMS 		?= "DefWorld"
 
+GITMSG 			?= "commit"
+GITRMV 			:= *.o , *.a , *.dll
+GITBRN 			?= dev
+
 ifeq ($(PLATFORM), Windows)
 	CFLAGS 		+= -DAPOLLO_PLATFORM_WINDOWS
 	DELFILE 	:= del /S /Q
@@ -37,6 +41,7 @@ endif
 
 ifeq ($(CONFIG), DEBUG)
 	CFLAGS += -g
+	GITRMV += , *.s, *.ii
 else
 	CFLAGS += -s
 endif
@@ -61,7 +66,7 @@ export EXEPARAMS
 default_target: all
 
 
-.PHONY: all libraries libs md-lib clean-all clean-apollo clean-sandbox clean-lib run apollo sandbox
+.PHONY: all libraries libs md-lib clean-all clean-apollo clean-sandbox clean-lib run apollo sandbox _git
 
 
 all: libraries apollo sandbox
@@ -71,7 +76,7 @@ libraries: md-lib libs
 
 
 libs:
-	@$(MAKE) -C $(EXTDIR) -flibrary.mk --no-print-directory
+	@$(MAKE) -C $(EXTDIR) -flibrary.mk --no-print-directory --keep-going
 
 
 md-lib:
@@ -80,30 +85,37 @@ md-lib:
 
 apollo:
 	@echo Making apollo
-	@$(MAKE) -C $(APDIR) -fapollo.mk --no-print-directory
+	@$(MAKE) -C $(APDIR) -fapollo.mk --no-print-directory --keep-going
 
 
 sandbox:
 	@echo Making sandbox
-	@$(MAKE) -C $(SBDIR) -fsandbox.mk --no-print-directory
+	@$(MAKE) -C $(SBDIR) -fsandbox.mk --no-print-directory --keep-going
 
 
 clean-all: clean-lib clean-apollo clean-sandbox
 
 
 clean-lib:
-	$(MAKE) clean -C $(EXTDIR) -flibrary.mk --no-print-directory
+	$(MAKE) clean -C $(EXTDIR) -flibrary.mk --no-print-directory --keep-going
 
 clean-apollo:
-	$(MAKE) clean -C $(APDIR) -fapollo.mk --no-print-directory
+	$(MAKE) clean -C $(APDIR) -fapollo.mk --no-print-directory --keep-going
 
 
 clean-sandbox:
-	$(MAKE) clean -C $(SBDIR) -fsandbox.mk --no-print-directory
+	$(MAKE) clean -C $(SBDIR) -fsandbox.mk --no-print-directory --keep-going
 
 
 run:
 	@$(MAKE) run -C $(SBDIR) -fsandbox.mk --no-print-directory
+
+
+_git:
+	git add *
+	git rm --cached $(GITRMV)
+	git commit -m \"$(GITMSG)\"
+	git push origin $(GITBRN)
 
 
 %.c:

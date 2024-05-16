@@ -7,20 +7,36 @@ struct GLFWwindow;
 
 namespace Apollo {
 
+	struct APOLLO_API WindowProperties
+	{
+		APsize Width;
+		APsize Height;
+		std::string Title;
+		// icon
+		bool Resizable;
+
+		struct GLViewport
+		{
+			APi32 X, Y, W, H;
+		} Viewport;
+
+		struct WindowPos
+		{
+			APi32 X, Y;
+		} Position;
+	};
+
 	class APOLLO_API Window
-{
+	{
 	public:
-		Window(APsize width, APsize height);
-		Window(APsize size);
-		Window(APsize width, APsize height, const std::string &name);
-		Window(APsize size, const std::string &name);
+		Window(const WindowProperties &wP);
 		Window(const Window &) = delete;
 		virtual ~Window();
 
 		static bool Initialize();
 		static void Terminate();
 
-		// getters
+		// Getters
 		inline const GLFWwindow *GetGLFWWindow() const { return m_Win; }
 		inline GLFWwindow *GetGLFWWindowDebug() const 
 		{
@@ -30,24 +46,31 @@ namespace Apollo {
 			return nullptr;
 #endif
 		}
-		inline APsize GetWidth() const { return m_Width; }
-		inline APsize GetHeight() const { return m_Height; }
-		inline const std::string &GetTitle() const { return m_Title; }
+		APsize GetWidth() const;
+		APsize GetHeight() const;
+		const std::string &GetTitle() const;
+		bool IsResizable() const;
+		const WindowProperties &Properties() const;
 
-		// setters
+		// Setters
 		void SetWidth(APsize width);
 		void SetHeight(APsize height);
 		void SetTitle(const std::string &title);
+		void SetViewportSize(const WindowProperties::GLViewport &vp);
+		void SetWindowPos(const WindowProperties::WindowPos &pos);
+		void CenterWindowOnScreen();
 
 		void SetCurrentContext();
 		void SwapBuffers();
 		void CopyTo(Window &win);
-		bool IsKeyPressed();
-		bool IsMouseButtonPressed();
 		void Close();
 		void Open();
 		void Destroy();
 		bool IsOpen();
+		bool IsKeyPressed();
+		bool IsKeyPressed(Input::KeyCode keyCode);
+		bool IsKeyReleased();
+		bool IsKeyReleased(Input::KeyCode keyCode);
 
 		static void PollEvents();
 
@@ -55,8 +78,7 @@ namespace Apollo {
 		void m_SetCallbacks();
 
 	private:
-		APsize m_Width, m_Height;
-		std::string m_Title;
+		WindowProperties m_Properties;
 		GLFWwindow *m_Win;
 		bool m_IsOpen = false ;
 		// icon stuff

@@ -2,6 +2,9 @@ BINDIR 			:= bin
 SRCDIR 			:= source
 INCDIR 			:= $(SRCDIR)/include
 
+# FOR INCLUDING HEADER FILES TOO, MAYBE LOOK INTO USING $(lib): $(OBJFILE) $(HEADERFILE)
+# $(CC) ... $(OBJFILE) -INCLUDE $(HEADERFILE)
+
 _APDIR 			:= .
 _SBDIR 			:= ../$(SBDIR)
 _LIBDIR 		:= ../$(LIBDIR)
